@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <link rel="stylesheet" type="text/css" href="vendors/css/normalize.css">
+        <link rel="stylesheet" type="text/css" href="vendors/css/grid.css">
+        <link rel="stylesheet" type="text/css" href="vendors/css/ionicons.min.css">
+        <link rel="stylesheet" type="text/css" href="vendors/css/animate.css">
+        <link rel="stylesheet" type="text/css" href="resources/css/style.css">
+        <link rel="stylesheet" type="text/css" href="resources/css/queries.css">
+        <link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,300italic' rel='stylesheet' type='text/css'>
+        
+        <script type="text/javascript" src="resources/js/instascan.min.js"></script>
+      
+        <script type="text/javascript">
+          
+          var initial = "Scanning, Please put QR after webcam";
+          var scanned = "\nQR Scanned successfully, Adding QR to blockchain if not present";
+            
+          function updateQr(content){
+            alert("QR Scanned successfully. Add QR to blockchain if not present ?");
+            addIfNotVerifyQr(content);
+          }
+          
+          function addIfNotVerifyQr(value) {
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.open( "GET", "https://backdavs.khachoyan.org/davs/api/addIfNotVerifyQr?value="+value, false ); // false for synchronous request
+            xmlHttp.send( null );
+            obj = JSON.parse(xmlHttp.responseText);
+            console.log(obj.result);
+            if(obj.result.length!=7){
+                document.getElementById("result").innerHTML = "QR Added. Transaction hash : "+obj.result;
+            }else{
+                document.getElementById("result").innerHTML = "QR is already present on blockchain"
+            }
+            
+          }
+            
+          function scanQr(){
+              document.getElementById("result").innerHTML = initial;
+              let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
+              scanner.addListener('scan', function (content) {
+                  console.log("QR scanned is "+content);
+                  updateQr(content);
+              });
+              
+              Instascan.Camera.getCameras().then(function (cameras) {
+                  if (cameras.length > 0) {
+                      scanner.start(cameras[0]);
+                  } else {
+                      console.error('No cameras found.');
+                  }
+              }).catch(function (e) {
+                  console.error(e);
+              });
+          }
+      
+        </script>
+      
+        
+        <title>Decentralized Authenticition</title>
+        
+    </head>
+    <body>
+        <header>
+            <nav>
+                <div class="row">
+                    <img src="resources/img/logo-white.png" alt="Omnifood logo" class="logo">
+                    <img src="resources/img/logo.png" alt="Omnifood logo" class="logo-black">
+                    <ul class="main-nav js--main-nav">
+                        <li><a href="#add">Add QR</a></li>
+                        <li><a href="#add">Verify QR</a></li>
+                        <li><a href="#contactUs">Contact Us</a></li>
+                    </ul>
+                    <a class="mobile-nav-icon js--nav-icon"><i class="ion-navicon-round"></i></a>
+                </div>
+            </nav>
+            <div class="hero-text-box">
+                <h1>Decentralized Authenticity <br> Verification System</h1>
+                <a class="btn btn-full js--scroll-to-plans" href="#add">Add Account</a>
+                <a class="btn btn-ghost js--scroll-to-start" href="#add">Verify Account</a>
+            </div>
+            
+        </header>
+        
+        <section class="section-features js--section-features" id="add">
+            <div class="row">
+                <h2>Add / Verify Account</h2>
+                
+                <p class="long-copy" style="text-align: center;">
+                    Please put QR Code in front of Camera before clicking <em> Scan QR</em>
+                </p>
+                                    
+                <div class="row">
+                    <div class="col span-1-of-3">
+                        <label>&nbsp;</label>
+                    </div>
+                    
+                    <div class="col span-2-of-3">
+                        <video poster="resources/img/camera.png" id="preview" height="168" width="168"></video>
+                    </div>
+                    
+                </div>
+                
+                <div class="row">
+                    <div class="col span-1-of-3">
+                        <label>&nbsp;</label>
+                    </div>
+                    <br />
+                    
+                    <div class="col span-2-of-3">
+                        <input id="qrScan" onclick="scanQr()" type="submit" value="Scan QR & Add to Blockchain">
+                    </div>
+                    
+                </div>
+                
+                <br />
+                
+                <textarea id="result" class="long-copy" style="text-align: left;font-size: 13pt; font-weight: bold;">
+                    
+                </textarea>
+                    
+            </div>
+            
+        </section>
+        
+        <section class="section-form" id="contactUs">
+            <div class="row">
+                <h2>We're happy to hear from you</h2>
+            </div>
+            <div class="row">
+                <form method="post" action="#" class="contact-form">
+                    <div class="row">
+                        <div class="col span-1-of-3">
+                            <label for="name">Name</label>
+                        </div>
+                        <div class="col span-2-of-3">
+                            <input type="text" name="name" id="name" placeholder="Your name" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col span-1-of-3">
+                            <label for="email">Email</label>
+                        </div>
+                        <div class="col span-2-of-3">
+                            <input type="email" name="email" id="email" placeholder="Your email" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col span-1-of-3">
+                            <label for="find-us">How did you find us?</label>
+                        </div>
+                        <div class="col span-2-of-3">
+                            <select name="find-us" id="find-us">
+                                <option value="friends" selected>Friends</option>
+                                <option value="search">Search engine</option>
+                                <option value="ad">Advertisement</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col span-1-of-3">
+                            <label>Drop us a line</label>
+                        </div>
+                        <div class="col span-2-of-3">
+                            <textarea name="message" placeholder="Your message"></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col span-1-of-3">
+                            <label>&nbsp;</label>
+                        </div>
+                        <div class="col span-2-of-3">
+                            <input type="submit" value="Send it!">
+                        </div>
+                    </div>
+                    
+                </form>
+                
+            </div>
+        </section>
+        
+        <footer>
+            <div class="row">
+                <div class="col span-1-of-2">
+                    <ul class="footer-nav">
+                        <li><a href="#add">Add QR</a></li>
+                        <li><a href="#add">Verify QR</a></li>
+                        <li><a href="#contactUs">Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+        </footer>
+        
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="//cdn.jsdelivr.net/respond/1.4.2/respond.min.js"></script>
+    <script src="//cdn.jsdelivr.net/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="//cdn.jsdelivr.net/selectivizr/1.0.3b/selectivizr.min.js"></script>
+    <script src="vendors/js/jquery.waypoints.min.js"></script>
+    <script src="resources/js/script.js"></script>
+    
+    </body>  
+    
+</html>

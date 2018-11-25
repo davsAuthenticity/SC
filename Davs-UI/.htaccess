@@ -1,0 +1,10 @@
+RewriteEngine On
+RewriteCond %{HTTPS}  !=on
+##RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R,L]
+##RewriteCond %{SERVER_PORT} ^39932$
+##RewriteRule ^/?(.*) http://127.0.0.1:39032 [R=301,L]
+RewriteCond %{SERVER_PORT} !^39932$
+RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R=301,L]
+###LogLevel alert rewrite:trace6
+##RewriteLog "/var/log/apache2/rewrite.log"
+##RewriteLogLevel 3
