@@ -56,7 +56,52 @@ public class Dashboard {
 		}
 
 	}
-	
+
+	@RequestMapping(value = "/sendEmail", method = RequestMethod.GET)
+	public String sendEmail(@RequestParam(value="name",required=false) String name, @RequestParam(value="email",required=false) String email, @RequestParam(value="find-us",required=false) String findUs, @RequestParam(value="message",required=false) String message) {
+		try {
+			String actualName = "";
+			String actualEmail = "";
+			String actualMessage = "";
+			if(name!=null)
+				actualName = name;
+			if(email!=null)
+				actualEmail = email;
+			if(message!=null)
+				actualMessage = message;
+			String content = "<head>\n" + 
+					"  <link href=\"https://fonts.googleapis.com/css?family=Montserrat\" rel=\"stylesheet\">\n" + 
+					"</head>\n" + 
+					"<body style=\"font-family: 'Montserrat', sans-serif;\">\n" + 
+					"\n" + 
+					"  <p>\n" + 
+					"    <h3 style=\"text-decoration: underline; letter-spacing: 1px;\">Subscription Details</h3> \n" + 
+					"\n" + 
+					"    <ul style=\"list-style-type: none\">\n" + 
+					"      <li style=\"margin-top: 10px\">\n" + 
+					"        <strong>Name: </strong> "+actualName+"\n" + 
+					"      </li>\n" + 
+					"      <li style=\"margin-top: 20px\">\n" + 
+					"        <strong>Email : </strong> "+actualEmail+"\n" + 
+					"      </li>\n" + 
+					"      <li style=\"margin-top: 20px\">\n" + 
+					"        <strong>Message : </strong> "+actualMessage+"\n" + 
+					"      </li>\n" + 
+					"    </ul>\n" + 
+					"  </p>\n" + 
+					"</body>";
+			new EmailService(content).start();
+			return "Email sent successfully. Thank you for contacting us";
+
+		}catch(Exception e) {
+			e.printStackTrace();
+			JSONObject result = new JSONObject();
+			result.put("result", "Error: Invalid Request");
+			return result.toString();
+		}
+
+	}
+
 	@RequestMapping(value = "/addQr", method = RequestMethod.GET)
 	public String addQr(@RequestParam(value="value",required=false) String value) {
 
