@@ -52,8 +52,8 @@ public class EmailService extends Thread {
 	}
 	
 	public void prepareAndSendEmail(String subject, String body) {
-		final String fromEmail = "DAVSNotification@gmail.com"; //requires valid gmail id
-		final String password = "np%E3xR8vkGssq-R"; // correct password for gmail id
+		final String fromEmail = "..."; //requires valid gmail id
+		final String password = "..."; // correct password for gmail id
 		final String toEmail = fromEmail; // can be any email id 
 
 		Properties props = new Properties();
