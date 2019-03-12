@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><javaapi>
-    <connect ip="tcp://127.0.0.1" port="8547" user="admin" password="admin"/>
+    <connect ip="tcp://127.0.0.1" port="8547" user="..." password="..."/>
     <!--*** LOG ***-->
     <log>
         <module label="BSE">INFO</module>
