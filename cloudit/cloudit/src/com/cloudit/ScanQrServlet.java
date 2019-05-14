@@ -16,17 +16,23 @@ public class ScanQrServlet extends HttpServlet {
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String userId = request.getParameter("userid");
-		String decodeVal = request.getParameter("decodeQr");
+		String userId = null;
+		String decodeVal = null;
 		
-		CreateQrModel qrmodel = new CreateQrModel(userId);
+		String message = "N/A";
+		
+		HttpSession session = null;
+		
 		try {
+			
+			userId = request.getParameter("userid");
+			decodeVal = request.getParameter("decodeQr");
+			
+			CreateQrModel qrmodel = new CreateQrModel(userId);
 			
 			int insertedRows = qrmodel.createQrHash(decodeVal);
 			
-			HttpSession session = request.getSession(false);
-			
-			String message = "N/A";
+			session = request.getSession();
 			
 			if(insertedRows > 0)
 			{
@@ -37,22 +43,20 @@ public class ScanQrServlet extends HttpServlet {
 				message = "Record adding failed !";
 			}
 			
+			session.setAttribute("id", userId);
+			session.setAttribute("decodedVal", decodeVal);
 			session.setAttribute("message", message);
 			
-			RequestDispatcher dispatcher = request.getRequestDispatcher("/views/welcome.jsp");
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/views/scan.jsp");
 			dispatcher.forward(request, response);
 			
-		} catch (ClassNotFoundException e) {
+		} catch (Exception e) {
 			
-			System.out.println(e.getMessage());
+			message = e.getMessage();
+			request.setAttribute("message", message);
 			
-		} catch (WriterException e) {
-			
-			System.out.println(e.getMessage());
-			
-		} catch (SQLException e) {
-			
-			System.out.println(e.getMessage());
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/views/scan.jsp");
+			dispatcher.forward(request, response);
 		}
 	}
 	

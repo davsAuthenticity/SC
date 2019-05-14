@@ -1,6 +1,7 @@
 package com.cloudit;
 
 import java.awt.image.BufferedImage;
+import javax.imageio.*;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -30,54 +31,60 @@ import com.google.zxing.common.HybridBinarizer;
 
 class CreateQrModel {
 
+	String textToConvert;
 	String uId;
-	String uName;
-	String uEmail;
-	String uAdd;
 	String randomNumber;
 	DbUtil util = null;
 	QrGenerator qrg = null;
 	
-	public CreateQrModel(String id)
+	public CreateQrModel(String userId)
 	{
-		this.uId = id;
+		this.uId = userId;
+		util = new DbUtil();
+		qrg = new QrGenerator();
+	}
+	
+	public CreateQrModel(String userId, String textToConvert)
+	{
+		this.uId = userId;
+		this.textToConvert = textToConvert;
 		util = new DbUtil();
 		qrg = new QrGenerator();
 	}
 
-	public CreateQrModel(String id, String name, String email, String add) {
-		
-		this.uId = id;
-		this.uName = name;
-		this.uEmail = email;
-		this.uAdd = add;
-		util = new DbUtil();
-		qrg = new QrGenerator();
-	}
+//	public CreateQrModel(String id, String name, String email, String add) {
+//		
+//		this.uId = id;
+//		this.uName = name;
+//		this.uEmail = email;
+//		this.uAdd = add;
+//		util = new DbUtil();
+//		qrg = new QrGenerator();
+//	}
 	
 	public void createRandom()
 	{
 		randomNumber = Double.toString(Math.random());
 	}
 	
-	public String readQrFile() throws IOException 
-	{
-		String fileName = "QR-Code-"+this.uId+".txt";
-		File file = new File("C:\\Users\\tngar\\eclipse-workspace\\cloudit\\cloudit\\WebContent\\views",fileName);
-		String fileText = null;
-		
-		if(file.exists())
-		{
-			BufferedReader in = new BufferedReader(new FileReader(file));
-			fileText = in.readLine();
-		}
-		else
-		{
-			fileText = "N/A";
-		}
-		
-		return fileText;
-	}
+//	public String readQrFile() throws IOException 
+//	{
+//		String fileName = "QR-Code-"+this.uId+".txt";
+//		File file = new File("C:\\Users\\tngar\\eclipse-workspace\\cloudit\\cloudit\\WebContent\\views",fileName);
+//		String fileText = null;
+//		
+//		if(file.exists())
+//		{
+//			BufferedReader in = new BufferedReader(new FileReader(file));
+//			fileText = in.readLine();
+//		}
+//		else
+//		{
+//			fileText = "N/A";
+//		}
+//		
+//		return fileText;
+//	}
 	
 //	public void retrieveQrFile() throws ClassNotFoundException, SQLException, IOException
 //	{
@@ -109,9 +116,12 @@ class CreateQrModel {
 	
 	public BufferedImage retrieveQrFile() throws ClassNotFoundException, SQLException, IOException
 	{
+		BufferedImage bi = null;
+		int flag = 0;
 		util.getConnection();
 		
-		String sql = "SELECT * FROM tbluserdata WHERE id='"+this.uId+"';";
+		//String sql = "SELECT * FROM tbluserdata WHERE id='"+this.uId+"';";
+		String sql = "SELECT * FROM tbluserqrcodes WHERE userId='"+this.uId+"';";
 		
 		ResultSet myRs = util.selectQuery(sql);
 		
@@ -120,16 +130,24 @@ class CreateQrModel {
 		String qrCodeStringRead = null;
 		
 		while(myRs.next())
-		{   qrCodeStringRead = myRs.getString("qrcode"); //Read the QR Code string from the result set and assign in to a String variable		
+		{  
+			flag = 1;
+			qrCodeStringRead = myRs.getString("qrcode"); //Read the QR Code string from the result set and assign in to a String variable		
 			imgArray = qrCodeStringRead.getBytes(); //Convert the String to byte array
 		}
 		
-		byte[] base64Decoded = Base64.decodeBase64(imgArray); //Decode the base64 byte array in to original byte array
-		
-		//System.out.println(qrCodeStringRead);
-		//System.out.println("Reading array byte[] version:"+base64Decoded);
-		
-		BufferedImage bi = qrg.getQrCodeImage(base64Decoded); //Pass the original byte array
+		if(flag == 1) {
+			byte[] base64Decoded = Base64.decodeBase64(imgArray); //Decode the base64 byte array in to original byte array
+			
+			//System.out.println(qrCodeStringRead);
+			//System.out.println("Reading array byte[] version:"+base64Decoded);
+			
+			bi = qrg.getQrCodeImage(base64Decoded); //Pass the original byte array
+		}
+		else
+		{
+			bi = readImageFromFile();
+		}
 		
 		util.closeConnection();
 		
@@ -138,9 +156,10 @@ class CreateQrModel {
 	
 	public void createQrFile() throws IOException, SQLException, ClassNotFoundException, WriterException
 	{			
-		String userData = this.uId+" "+this.uName+" "+this.uEmail+" "+this.uAdd; //Create a String with all the details of logged in user
+		//String userData = this.uId+" "+this.uName+" "+this.uEmail+" "+this.uAdd; //Create a String with all the details of logged in user
+		String qrCodeData = this.textToConvert;
 		
-		byte[] qrImg = qrg.getQrCodeBytes(userData, 350, 350); //Pass the user data, generate the QR code and get the byte array of the generated QR code
+		byte[] qrImg = qrg.getQrCodeBytes(qrCodeData, 200, 200); //Pass the user data, generate the QR code and get the byte array of the generated QR code
 		
 		byte[] base64Encoded = Base64.encodeBase64(qrImg); //Encode the byte array of the QR code as base64 byte array
 		
@@ -154,12 +173,14 @@ class CreateQrModel {
 		int updatedRows = 0;
 		
 		/* Update the tbluserdata by saving the qrcode as a string */
-		String sql = "UPDATE tbluserdata SET qrcode='"+qrCodeStringWrite+"' WHERE id='"+this.uId+"';";
+		//String sql = "UPDATE tbluserdata SET qrcode='"+qrCodeStringWrite+"' WHERE id='"+this.uId+"';";
+		
+		String sql = "INSERT INTO tbluserqrcodes (qrcode, userId) VALUES ('"+qrCodeStringWrite+"', '"+this.uId+"');";
 		updatedRows = util.updateQuery(sql);
 		
 		if(updatedRows>0)
 		{
-			System.out.println("Successfully updated the QR Code!");
+			System.out.println("Successfully added the QR Code!");
 		}
 		
 		util.closeConnection();		
@@ -205,5 +226,12 @@ class CreateQrModel {
             System.out.println("There is no QR code in the image");
             return null;
         }
+	}
+	
+	public BufferedImage readImageFromFile() throws IOException 
+	{
+		String fileName = "default-qr.png";
+		File file = new File("C:\\Users\\tngar\\eclipse-workspace\\cloudit\\cloudit\\WebContent\\images",fileName);
+		return ImageIO.read(file);
 	}
 }

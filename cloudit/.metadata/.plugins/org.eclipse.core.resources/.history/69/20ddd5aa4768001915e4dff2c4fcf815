@@ -1,0 +1,42 @@
+package com.cloudit;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+public class UpdateNotesServlet extends HttpServlet {
+	
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		try {
+			
+			String notes = request.getParameter("newNotes");
+			
+			HttpSession session = request.getSession(false);
+			
+			String userId = session.getAttribute("id").toString();
+			
+			AddDataModel adm = new AddDataModel();
+			adm.updateNotes(userId, notes);
+			
+			ArrayList<User> ulist = adm.getUser();
+			
+			String updatedNotes = ulist.get(0).getNotes();
+			
+			session.setAttribute("notes", updatedNotes);
+			
+			response.getWriter().println("User Notes retrieved from the database as follows : " +updatedNotes);
+			
+		}catch(Exception e)
+		{
+			response.getWriter().println(e.getMessage());
+		}
+		
+	}
+
+}

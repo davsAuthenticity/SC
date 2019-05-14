@@ -1,0 +1,6 @@
+runtime: java
+env: flex
+
+env_variables:
+    BUCKET_NAME: 'avsfilestorage'
+    SERVICE_JSON_FILE: 'psyched-edge-235319-653c028df72c.json'

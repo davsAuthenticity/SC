@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
+  <application>psyched-edge-235319</application><!-- unused for Cloud SDK based tooling -->
+  <version>1</version><!-- unused for Cloud SDK based tooling -->
+  <threadsafe>true</threadsafe>
+  <use-google-connector-j>true</use-google-connector-j>
+  <system-properties>
+        <property name="ae-cloudsql.cloudsql-database-url"
+        	value="jdbc:google:mysql://psyched-edge-235319:us-central1:clouditmysql/dbcloudit?user=cloud&amp;password=tharindu" />
+    </system-properties>
+  <sessions-enabled>true</sessions-enabled>
+  <async-session-persistence enabled="true" />
+</appengine-web-app>

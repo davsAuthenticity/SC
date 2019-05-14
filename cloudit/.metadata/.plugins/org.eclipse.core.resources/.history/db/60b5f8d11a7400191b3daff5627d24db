@@ -1,0 +1,176 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+	<!-- <form action="/" enctype="text/plain" method="get" name="putFile" id="putFile">
+      <div>
+            Bucket: <input type="text" name="bucket" />
+            File Name: <input type="text" name="fileName" />
+            <br /> File Contents: <br />
+            <textarea name="content" id="content" rows="3" cols="60"></textarea>
+            <br />
+            <input type="submit" onclick='uploadFile(this)' value="Upload Content" />
+      </div>
+    </form>
+    <br>
+    <form name="getFile">
+      <div>
+            Bucket: <input type="text" name="bucket" id="bucket" />
+            File Name: <input type="text" name="fileName" id="fileName" />
+      </div>
+    </form>
+    <form action="/" method="get" name="submitGet">
+      <div>
+            <input type="submit" onclick='changeGetPath(this)' value="Download Content" />
+      </div>
+    </form> -->
+    <!-- <form action="https://storage.googleapis.com/avsfilestorage" 
+	      method="post" enctype="multipart/form-data">
+	  <input name="key" type="text" value="objectName.txt" /><br/>
+	  <input name="file" type="file" /><br/>
+	  <input type="submit" value="Upload!" />
+	</form> -->
+	<form enctype="multipart/form-data" name="putFile" id="putFile">
+	  <input name="files" type="file" required /><br/>
+	  <input type="button" value="Upload" onclick="handleFiles(this.files);"/>
+	</form>
+    
+    <script>
+    
+	    /*function handleFiles(files) {
+	        for (var i = 0; i < files.length; i++) {
+	            var file = files[i];
+	            var filename = file.name;
+	            $.getJSON("cloudupload", {
+	                    filename: filename,
+	                    content_type: file.type
+	                },
+	                uploadCallback(file)
+	            );
+	        }
+	    }*/
+	    
+	    function handleFiles(files) {
+	        for (var i = 0; i < files.length; i++) {
+	            var file = files[i];
+	            var filename = file.name;
+	            
+	            $.ajax({
+// 	    			type: "post",
+// 	    			url: "cloudupload", 
+// 	    			data: { filename: filename,
+// 	                    content_type: file.type
+// 	                },
+// 	    			success: function(){
+// 	    			alert("test");
+// 	    			},//uploadCallback(file),
+// 	    			error: function(){
+// 	    			alert("error");
+// 	    			}
+	            	type: "post",
+					url: "updatenotes", 
+					data: { filename: filename },
+					success: function(data){ 
+					alert("test");
+					},
+					error: function(){
+					alert("error");
+					}
+	    		});
+	        }
+
+			//alert("hello");
+	    }
+	    
+	    
+	    
+	    var uploadCallback = function (uploadedFile) {
+            return function (data) {
+                var url = data['url'];
+                var key = data['key'];
+                upload(url, uploadedFile, key);
+            }
+        };
+        
+        function upload(url, file, key) {
+            $.ajax({
+                url: url,
+                type: 'PUT',
+                data: file,
+                contentType: file.type,
+                success: function () {
+                    $('#messages').append('<p>' + Date().toString() + ' : ' + file.name + ' ' + '<span id="' + key + '"' + '></span></p>');
+                    //postUploadHandler(key)
+                },
+                error: function (result) {
+                    console.log(result);
+                },
+                processData: false
+            });
+        }
+        
+        /*function postUploadHandler(key) {
+            $.post('/postdownload/',
+                {
+                    key: key
+                })
+        }*/
+    
+    	function cloudUpload()
+		{
+    		var redirectUrl = 'cloudupload'; 
+    		
+			var filename = document.forms["putFile"]["file"].value;
+			
+			var form = $('<form action="' + redirectUrl + '" method="post">' +
+					'<input type="text" name="fileTempName" value="' +filename +'" />' +
+					'</form>');
+					
+				$('body').append(form);
+				form.submit();
+		}
+    	
+	    function setDownloadDefaults() {
+        var url = location.search;
+        var bucketArg = url.match(/bucket=[^&]*&/);
+        if (bucketArg !== null) {
+          document.getElementById("bucket").value = bucketArg.shift().slice(7, -1);
+        }
+        var fileArg = url.match(/fileName=[^&]*&/);
+        if (fileArg !== null) {
+          document.getElementById("fileName").value = fileArg.shift().slice(9, -1);
+        }
+      }
+      function changeGetPath() {
+        var bucket = document.forms["getFile"]["bucket"].value;
+        var filename = document.forms["getFile"]["fileName"].value;
+        if (bucket == null || bucket == "" || filename == null || filename == "") {
+          alert("Both Bucket and FileName are required");
+          return false;
+        } else {
+          document.submitGet.action = "/gcs/" + bucket + "/" + filename;
+        }
+      }
+      function uploadFile() {
+        var bucket = document.forms["putFile"]["bucket"].value;
+        var filename = document.forms["putFile"]["fileName"].value;
+        if (bucket == null || bucket == "" || filename == null || filename == "") {
+          alert("Both Bucket and FileName are required");
+          return false;
+        } else {
+          var postData = document.forms["putFile"]["content"].value;
+          document.getElementById("content").value = null;
+          var request = new XMLHttpRequest();
+          request.open("POST", "/gcs/" + bucket + "/" + filename, false);
+          request.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");
+          request.send(postData);
+        }
+      }
+    </script>
+</body>
+</html>

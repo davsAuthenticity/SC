@@ -1,0 +1,189 @@
+package com.cloudit;
+
+import com.google.auth.Credentials;
+import com.google.auth.oauth2.ServiceAccountCredentials;
+import com.google.cloud.Role;
+import com.google.cloud.storage.Acl;
+import com.google.cloud.storage.Blob;
+import com.google.cloud.storage.BlobInfo;
+import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.Storage.SignUrlOption;
+import com.google.cloud.storage.StorageOptions;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
+
+import javax.servlet.MultipartConfigElement;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
+
+import org.eclipse.jetty.server.Request;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
+
+import java.nio.file.NoSuchFileException;
+
+public class CloudUploadServlet extends HttpServlet {
+	
+	private static Storage storage = null;	
+	private static Credentials credentials = null;
+	//Project Id can be obtained from your GCP console dashboard.
+	private static String projectId = null;
+	
+	//Create the bucket using the REST API or manually using the Google Cloud Storage Browser Interface.
+	private static String bucketName = null;
+	
+	//Following 4 parameters can be obtained from the Private Key file.
+	//Client Id will usually be a numeric string
+	private static String clientId = null;
+	
+	//Client Email Id is the email Id generated when you create the service account. This will be in the format of: *.iam.gserviceaccount.com
+	private static String clientEmailId = null;
+	
+	//Private key can be obtained from the key file. This will be a very long string within the file. Paste the entire string here.
+	private static String privateKey = null;
+	
+	//Private Key Id can be obtained from the key file. This is ususally a numeric string.
+	private static String privateKeyId = null;
+	
+	   
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		//Part filePart =  request.getPart("cloudFile");
+		
+		//InputStream fileInputStream = filePart.getInputStream();
+		
+		//File fileToSave = new File("WebContent/uploadedFiles/" + filePart.getSubmittedFileName());
+		//Files.copy(fileInputStream, fileToSave.toPath(), StandardCopyOption.REPLACE_EXISTING);
+		
+		/*String filePath = filePart.getSubmittedFileName();
+		
+		byte[] fileArray = Files.readAllBytes(new File(filePath).toPath());
+		
+		boolean result = uploadFile(filePath, fileArray);
+	    
+		if(result == true)
+		{
+		    RequestDispatcher dispatcher = request.getRequestDispatcher("/views/index.jsp");
+			dispatcher.forward(request, response);
+		}
+		else
+		{
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/views/scan.jsp");
+			dispatcher.forward(request, response);
+		}*/
+		
+		projectId = "psyched-edge-235319";
+		
+		//Create the bucket using the REST API or manually using the Google Cloud Storage Browser Interface.
+		bucketName = "avsfilestorage";
+		
+		//Following 4 parameters can be obtained from the Private Key file.
+		//Client Id will usually be a numeric string
+		clientId = "101080073293335742991";
+		
+		//Client Email Id is the email Id generated when you create the service account. This will be in the format of: *.iam.gserviceaccount.com
+		clientEmailId = "avsfilestorage@psyched-edge-235319.iam.gserviceaccount.com.";
+		
+		//Private key can be obtained from the key file. This will be a very long string within the file. Paste the entire string here.
+		privateKey = "\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDM5XO46mkrRKDU\\nrREhbgEjkYlP0RfpRJ4/hoEdPFSIaoyoc/xhFXzgWRWRgvd+VvFEffVo1FRj1BD9\\niHAufhA4PV9BNWJDXMhcZ2LgE+p2XZhY6o7+nlanJ7xygq06ZjWBuRxBvhRfn4A0\\ns5h7uOCQX5jLn/a4/UGHPE1KtS5nLAFxbVXiqa7ZGgStLpPtDw6NseKdBiEa8W3M\\nWkki5PGy58sAqNBfZXklAwrKHEK7K+jchMyUyFDkyMX+ZS1Qa7DMaSJSC6rCPssm\\nyY21KPNKV8mD+oSeNjS/0nYqrJJ44cakaZMCpP+T1iir5Qx7tHCTEotE270B5yvg\\n/NKfQ9nhAgMBAAECggEACiOUjWL0H1L/DmceAOR7o/HwtIVpRH7Dwer6+qJgoHt9\\nSFys8XTpwARIf/HWI2dT+wqsmSpgnqwAxzr4KiTM0queyhBFM4Yk2AW5q9LweDj7\\nb/LzboARU6Ywug3jWo9yOGAbmNk6Et1Gr9TvR7gHTL2eRv08bT0DABkozfiXOj2p\\nfjc2TBeH7mgD5qa+dn09JmLUq+YX6yg1Uod7j3TjhKN8V4k+lEtSRqm7HU8VdRWB\\nb+QHPA7WU2mhTlYQ7jfxqdeyqbpDkkkUOZ14mXpk48DFtMOBn2N8WRIq2bcjpA47\\nJqK7pEkdWgnEXcNWhB+nIo6n1if3kV+qTeo52wv03QKBgQD2jf+Dx6EqB4g4k6rD\\n1dQi1bgw68orQs4LwiQcwfDSUpx/BT6aTg8q1Gu1ADjSZQl3aqlI4OpdDsEUk7uw\\nslOTvSHXQhJMQHa6mfR4hFDxnoEXrny24Ys/ogDiVJfMsXlYarlSzqWedtxmIPDI\\nBj6U3F5c7PBWlHjtX1+lCSqTSwKBgQDUvudEiyP84+M9AlW0DISZflnqoP3FRuFF\\n4RmC5qQounFEo5aQ4mBJQ5DM+9dhKriLYm12l4WrCMqdw3B4uiCl9QrJLHoYccjQ\\nUVYNdXFHDBegG/enxobS+ITGmnuaMGhBopugMRiW8AzAmz0vbK9OPOrGodJ6Iqgh\\nzjjdSJhgAwKBgHUlpQlVOfNBXu0a5KFmIQRoLbs43XdOp54YoZX0ZFtamzcTI9qn\\nSjecdIyszVLSZPwTdtnE3DZZA06mnyBmqqVg0Qp5Pz5xxrgE3I7Ct78GA+pfoqw2\\nYDZc4DSp4vKERNbI5sM8op63dSMldaJkrSmHx2I5xjwtEYQfs88zmsIfAoGAUtiY\\nlM+eTw+rYQm0uC2bwW47s6vHxvgIJ781wQzx5k5cZ39Q1dDh8AXYsIpt4A/T16uX\\ntvPggK8mv/LorIrGxfm7noWscjJ1IfJakVknqKQj2xyo/3PG8wcGJZTpBy1MnCqn\\nceVMjxKh1KtfU0V+qvf78Sf5H8i5Mpjs+fcYJ2MCgYAo4LO80qQ7BAQ8DkD4+Kkg\\n/5idv8ApBEVIwt7H8avuTn0BQDgGWDcZnWZVu2LOlT0Huk7Tzm4AzpJPw65gKvAK\\nyqMt+BtriGXyuV5vr23P9Fh8UxJhp3U5pv/DciTwPo8IuH6kPQFrrgAzG+8PYD3A\\nfLZp0DK4mTn/lAjNKq6j3w==\n";
+		
+		//Private Key Id can be obtained from the key file. This is ususally a numeric string.
+		privateKeyId = "653c028df72caa0f2512ddf59ae3fbde4e0f44ff.";
+		
+		String filePath = request.getParameter("filename"); 
+		
+		String signUrl = "Default";
+		
+		try {
+			signUrl = getTemporaryFileLink(filePath);
+			
+			if(signUrl.equalsIgnoreCase(""))
+			{
+				signUrl = "nothing here";
+			}
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		response.getWriter().println(signUrl);
+
+	}
+	
+	private String setDefaultStorageCredentials() {
+		try {			
+			credentials = ServiceAccountCredentials.fromPkcs8(clientId, clientEmailId, privateKey, privateKeyId, null);			
+			storage = StorageOptions.newBuilder()
+					.setCredentials(credentials)
+					.setProjectId(projectId).build().getService();
+			
+			return "ok";
+	
+		} catch (Exception e) {
+			return e.getMessage();
+		}
+	}
+	
+	public boolean uploadFile(String filePath, byte[] file) {
+		try {
+			setDefaultStorageCredentials();
+			storage.create(BlobInfo.newBuilder(bucketName, filePath).build(),
+					new ByteArrayInputStream(file));
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+	
+	public String getTemporaryFileLink(String filePath) throws Exception{
+        String msg = setDefaultStorageCredentials();     
+        Blob blob = storage.get(bucketName).get(filePath);      
+        String blobName = blob.getName();       
+        URL signedUrl = storage.signUrl(BlobInfo.newBuilder(bucketName, blobName).build(), 5,TimeUnit.MINUTES);
+        return signedUrl.toExternalForm();
+    }
+	
+//	public String uploadCloudFile(Part filePart, final String bucketName) throws IOException {
+//	    org.joda.time.format.DateTimeFormatter dtf = DateTimeFormat.forPattern("-YYYY-MM-dd-HHmmssSSS");
+//	    DateTime dt = DateTime.now(DateTimeZone.UTC);
+//	    String dtString = dt.toString(dtf);
+//	    final String fileName = filePart.getSubmittedFileName() + dtString;
+//
+//	    // the inputstream is closed by default, so we don't need to close it here
+//	    BlobInfo blobInfo =
+//	        storage.create(
+//	            BlobInfo
+//	                .newBuilder(bucketName, fileName)
+//	                // Modify access list to allow all users with link to read file
+//	                .setAcl(new ArrayList<>(Arrays.asList(Acl.of(User..ofAllUsers(), Role.READER))))
+//	                .build(),
+//	            filePart.getInputStream());
+//	    // return the public download link
+//	    return blobInfo.getMediaLink();
+//	  }
+
+}

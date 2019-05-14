@@ -19,7 +19,20 @@ class DbUtil {
 	public DbUtil()
 	{
 		/*Assign database credentials */
-		dbUrl = "jdbc:mysql://localhost:3306/dbcloudit";
+		//dbUrl = "jdbc:mysql://35.202.44.43:3306/dbcloudit";
+				//dbUrl = "jdbc:google:mysql://psyched-edge-235319:us-central1:clouditmysql/dbcloudit";
+				//dbUrl = "jdbc:mysql://35.202.44.43:3306/psyched-edge-235319:us-central1:clouditmysql/dbcloudit";
+				//dbUrl = "jdbc:mysql://35.202.44.43:psyched-edge-235319:us-central1:clouditmysql?user=cloud";
+				//dbUrl = "jdbc:google:mysql://psyched-edge-235319:us-central1:clouditmysql/dbcloudit";
+				//dbUrl = "jdbc:mysql://35.202.44.43:3306/dbcloudit?cloudSqlInstance=psyched-edge-235319:us-central1:clouditmysql&socketFactory=com.google.cloud.sql.mysql.SocketFactory&useSSL=false&user=cloud&password=tharindu";
+				//dbUrl = "jdbc:mysql://35.202.44.43/dbcloudit?cloudSqlInstance=psyched-edge-235319:us-central1:clouditmysql&socketFactory=com.google.cloud.sql.mysql.SocketFactory&user=cloud&password=tharindu&useSSL=false";
+				//dbUrl = "jdbc:google:mysql://psyched-edge-235319:us-central1:clouditmysql/dbcloudit";
+				//dbUrl = "jdbc:mysql://psyched-edge-235319.appspot.com:3306/dbcloudit";
+				//dbUrl = "jdbc:google:mysql://psyched-edge-235319:us-central1:clouditmysql/dbcloudit";
+				//dbUrl = "jdbc:google:mysql://clouditmysql:psyched-edge-235319:us-central1/dbcloudit";
+				//dbUrl = "jdbc:google:mysql://psyched-edge-235319:psyched-edge-235319:us-central1:clouditmysql/dbcloudit?user=cloud&password=tharindu";
+				//dbUrl = "jdbc:google:mysql://psyched-edge-235319:us-central1:clouditmysql/dbcloudit?user=cloud&password=tharindu";
+		dbUrl = "jdbc:mysql://google/dbcloudit?cloudSqlInstance=psyched-edge-235319:us-central1:clouditmysql&socketFactory=com.google.cloud.sql.mysql.SocketFactory";
 		username = "cloud";
 		password = "tharindu";
 	}
@@ -28,12 +41,33 @@ class DbUtil {
 	{
 		/*Load the MySQL driver */
 		Class.forName("com.mysql.jdbc.Driver");
+		//Class.forName("com.mysql.jdbc.GoogleDriver");
 		
 		/*Get the MySQL Connection */
 		myConn = DriverManager.getConnection(dbUrl, username, password);
+		//myConn = DriverManager.getConnection(dbUrl);
 		System.out.println("Connection successful");
 		
 		myStmt = myConn.createStatement();
+	}
+	
+	public String testConnection() throws SQLException, ClassNotFoundException
+	{
+		/*Load the MySQL driver */
+		Class.forName("com.mysql.jdbc.Driver");
+		//Class.forName("com.mysql.jdbc.GoogleDriver");
+		
+		/*Get the MySQL Connection */
+		myConn = DriverManager.getConnection(dbUrl, username, password);
+		//myConn = DriverManager.getConnection(dbUrl);
+		System.out.println("Connection successful");
+		
+		if(myConn == null)
+		{
+			return "failed";
+		}
+		
+		return "success";
 	}
 	
 	public ResultSet selectQuery(String sql) throws SQLException

@@ -1,0 +1,7 @@
+<classpath>
+  <container id="cloudit!org.eclipse.jst.j2ee.internal.web.container">
+    <entry id="C:/Users/tngar/eclipse-workspace/cloudit_live/cloudit/WebContent/WEB-INF/lib/servlet-api.jar">
+      <source-attachment-path>/cloudit/apache-tomcat-8.5.40-src.zip</source-attachment-path>
+    </entry>
+  </container>
+</classpath>

@@ -5,6 +5,7 @@
 <head>
 <meta charset="ISO-8859-1">
 <title>Insert title here</title>
+<link rel="shortcut icon" href="favicon.ico"/>
 </head>
 <body>
 	Previous QR Code (Reading from file) : ${previousQr}

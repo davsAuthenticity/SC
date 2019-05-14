@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee:init-param" id="WebApp_ID" version="2.5">
   <display-name>cloudit</display-name>
   <welcome-file-list>
     <welcome-file>views/index.jsp</welcome-file>
@@ -63,5 +63,110 @@
   <servlet-mapping>
     <servlet-name>ScanQrServlet</servlet-name>
     <url-pattern>/scanqr</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>ScanServlet</display-name>
+    <servlet-name>ScanServlet</servlet-name>
+    <servlet-class>com.cloudit.ScanServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ScanServlet</servlet-name>
+    <url-pattern>/scan</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>AddNotesServlet</display-name>
+    <servlet-name>AddNotesServlet</servlet-name>
+    <servlet-class>com.cloudit.AddNotesServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AddNotesServlet</servlet-name>
+    <url-pattern>/addnotes</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>BackServlet</display-name>
+    <servlet-name>BackServlet</servlet-name>
+    <servlet-class>com.cloudit.BackServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>BackServlet</servlet-name>
+    <url-pattern>/back</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>NotesServlet</display-name>
+    <servlet-name>NotesServlet</servlet-name>
+    <servlet-class>com.cloudit.NotesServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>NotesServlet</servlet-name>
+    <url-pattern>/notes</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>UpdateNotesServlet</display-name>
+    <servlet-name>UpdateNotesServlet</servlet-name>
+    <servlet-class>com.cloudit.UpdateNotesServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>UpdateNotesServlet</servlet-name>
+    <url-pattern>/updatenotes</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>SendMailServlet</display-name>
+    <servlet-name>SendMailServlet</servlet-name>
+    <servlet-class>com.cloudit.SendMailServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SendMailServlet</servlet-name>
+    <url-pattern>/sendmail</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>DriveServlet</display-name>
+    <servlet-name>DriveServlet</servlet-name>
+    <servlet-class>com.cloudit.DriveServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>DriveServlet</servlet-name>
+    <url-pattern>/drive</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>CloudUploadServlet</display-name>
+    <servlet-name>CloudUploadServlet</servlet-name>
+    <servlet-class>com.cloudit.CloudUploadServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>CloudUploadServlet</servlet-name>
+    <url-pattern>/cloudupload</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>CloudStorageUploadServlet</display-name>
+    <servlet-name>CloudStorageUploadServlet</servlet-name>
+    <servlet-class>com.cloudit.CloudStorageUploadServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>CloudStorageUploadServlet</servlet-name>
+    <url-pattern>/gcsupload</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>GoogleCloudUploadServlet</display-name>
+    <servlet-name>GoogleCloudUploadServlet</servlet-name>
+    <servlet-class>com.cloudit.GoogleCloudUploadServlet</servlet-class>
+    <multipart-config>
+      <max-file-size>10485760</max-file-size>
+      <max-request-size>20971520</max-request-size>
+      <file-size-threshold>5242880</file-size-threshold>
+    </multipart-config>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>GoogleCloudUploadServlet</servlet-name>
+    <url-pattern>/googlecloud</url-pattern>
   </servlet-mapping>
 </web-app>

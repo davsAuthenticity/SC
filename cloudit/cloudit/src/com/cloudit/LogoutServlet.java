@@ -13,10 +13,20 @@ public class LogoutServlet extends HttpServlet {
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		HttpSession session = request.getSession(false);
+		HttpSession session = request.getSession();
+		//session.removeAttribute("id");
 		session.invalidate();
 		
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/");
+		response.setHeader("Cache-Control","no-cache"); 
+	    response.setHeader("Cache-Control","no-store"); 
+	    response.setDateHeader("Expires", 0); 
+	    response.setHeader("Pragma","no-cache");
+//		
+//		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
+//		response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
+//		response.setHeader("Expires", "0"); // Proxies.
+		
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/views/index.jsp");
 		dispatcher.forward(request, response);
 	}
 }

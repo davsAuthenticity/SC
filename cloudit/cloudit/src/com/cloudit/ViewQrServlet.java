@@ -1,6 +1,7 @@
 package com.cloudit;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -18,11 +19,15 @@ public class ViewQrServlet extends HttpServlet {
 	String qrContent = null;
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-			
+		
+		HttpSession session = null;
+		
 		try {
 				
-			HttpSession session = request.getSession(false);
-			uid = (String) session.getAttribute("id");
+			session = request.getSession();
+			//uid = (String) session.getAttribute("id");
+			
+			uid = request.getParameter("id");
 			
 			CreateQrModel qrmodel = new CreateQrModel(uid);
 		
@@ -39,7 +44,9 @@ public class ViewQrServlet extends HttpServlet {
 			
 		}catch(Exception e)
 		{
-				System.out.println(e.getMessage());
+			File file = new File("images/default-qr.png");
+			BufferedImage image = ImageIO.read(file);
+			ImageIO.write(image, "PNG", response.getOutputStream());
 		}
 	}
 }

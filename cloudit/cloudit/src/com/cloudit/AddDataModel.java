@@ -7,11 +7,12 @@ import java.util.ArrayList;
 class AddDataModel {
 	
 	DbUtil util = null;
-	ArrayList<User> userList = new ArrayList<User>(); // Create an ArrayList<User> object to store user/s returned from the database - Ideally list should contain only one user 
+	ArrayList<User> userList = null;
 	
-	public AddDataModel() throws ClassNotFoundException, SQLException
+	public AddDataModel()
 	{
 		util = new DbUtil();
+		userList = new ArrayList<User>(); // Create an ArrayList<User> object to store user/s returned from the database - Ideally list should contain only one user
 	}
 	
 	public ArrayList<User> addData(String id, String username, String imgUrl, String email, String idToken)
@@ -37,7 +38,7 @@ class AddDataModel {
 			if(rowCount == 0) //If user does not exist in the database
 			{
 				/* Inserting user details to the database */
-				sql2 = "INSERT INTO tbluserdata VALUES('"+id+"', '"+username+"', '"+imgUrl+"', '"+email+"', '"+idToken+"', 'N/A');";
+				sql2 = "INSERT INTO tbluserdata VALUES('"+id+"', '"+username+"', '"+imgUrl+"', '"+email+"', '"+idToken+"');";
 				updatedRows = util.updateQuery(sql2);
 				
 				if(updatedRows>0)
@@ -48,11 +49,12 @@ class AddDataModel {
 			else //If the user already exist in the database
 			{
 				/* Updating the ID Token for the particular user */
-				sql2 = "UPDATE tbluserdata SET idtoken='"+idToken+"' WHERE id="+id+";";
+				sql2 = "UPDATE tbluserdata SET name='"+username+"', imageurl='"+imgUrl+"', idtoken='"+idToken+"' WHERE id='"+id+"';";
 				updatedRows = util.updateQuery(sql2);
 				
 				if(updatedRows>0)
 				{
+					System.out.println("Image url :"+imgUrl);
 					System.out.println("Successfully updated user details!");
 				}
 			}
@@ -76,26 +78,69 @@ class AddDataModel {
 		}
 	}
 	
-	/* Private method that retrieve user details from the database */
-	private void showData(String id) throws SQLException
+	public void updateNotes(String id, String notes)
 	{
-		String sql3 = "SELECT * FROM tbluserdata WHERE id="+id+";";
+		int updatedRows = 0;
 		
-		ResultSet myRs2 = util.selectQuery(sql3);
-		
-		while(myRs2.next())
+		try {
+			
+			util.getConnection();
+			
+			String sql = "UPDATE tbluserdata SET notes='"+notes+"' WHERE id='"+id+"';";
+			
+			updatedRows = util.updateQuery(sql);
+			
+			if(updatedRows>0)
+			{
+				System.out.println("Successfully updated user details!");
+			}
+			
+			//showData(id); // Call a method to get user details from the database
+			
+		}catch(Exception e)
 		{
-			String uId = myRs2.getString("id");
-			String uName = myRs2.getString("name");
-			String uImgUrl = myRs2.getString("imageurl");
-			String uEmail = myRs2.getString("email");
-			String uIdToken = myRs2.getString("idtoken");
-			String uQrCode = myRs2.getString("qrcode");
-			
-			User loggedUser = new User(uId, uName, uImgUrl, uEmail, uIdToken, uQrCode);
-			
-			userList.add(loggedUser);
+			System.out.println(e.getMessage());
 		}
+	}
+	
+	/* Private method that retrieve user details from the database */
+	public void showData(String id)
+	{
+		try {
+			
+			util.getConnection();
+			
+			String sql3 = "SELECT * FROM tbluserdata WHERE id='"+id+"';";
+			
+			ResultSet myRs2 = util.selectQuery(sql3);
+			
+			while(myRs2.next())
+			{
+				String uId = myRs2.getString("id");
+				String uName = myRs2.getString("name");
+				String uTitle = myRs2.getString("title");
+				String uImgUrl = myRs2.getString("imageurl");
+				String uEmail = myRs2.getString("email");
+				String uIdToken = myRs2.getString("idtoken");
+				//String uQrCode = myRs2.getString("qrcode");
+				String uNotes = myRs2.getString("notes");
+				
+				User loggedUser = new User(uId, uName, uImgUrl, uEmail, uIdToken);
+				loggedUser.setTitle(uTitle);
+				//loggedUser.setQrCode(uQrCode);
+				loggedUser.setNotes(uNotes);
+				
+				userList.add(loggedUser);
+			}
+		}catch(Exception e)
+		{
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	public ArrayList<User> getUser()
+	{
+		return userList;
 	}
 }
 

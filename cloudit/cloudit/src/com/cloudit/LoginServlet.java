@@ -20,7 +20,13 @@ public class LoginServlet extends HttpServlet {
 		String username = request.getParameter("name");
 		String imageUrl = request.getParameter("imageUrl");
 		String email = request.getParameter("email");
-		String idToken = request.getParameter("id_token");
+		String idToken = request.getParameter("id_token");	
+		String back = request.getParameter("back");
+		String viewLink = request.getParameter("viewLink"); 
+		String downLink = request.getParameter("downLink"); 
+		String upLink = request.getParameter("upLink"); 
+		
+		HttpSession session = null;
 		
 		try {
 //			GoogleIdToken.Payload payload = IdTokenVerifierAndParser.getPayLoad(idToken);
@@ -28,45 +34,118 @@ public class LoginServlet extends HttpServlet {
 //			String id = (String)payload.get("id");
 //			String name = (String)payload.get("name");
 //			String imageUrl = (String)payload.get("imageUrl");
-//			String email = payload.getEmail();
+//			String email = payload.getEmail(); 
 			
-			System.out.println("ID :"+id);
-			System.out.println("User Name :"+username);
-			System.out.println("Image URL :"+imageUrl);
-			System.out.println("User Email :"+email);
-			System.out.println("ID Token :"+idToken);
+			if(viewLink.isEmpty() && downLink.isEmpty())
+			{
+				viewLink = "Empty";
+				downLink = "Empty";
+			}
+			else
+			{
+				AddDriveDataModel addDrive = new AddDriveDataModel(id, viewLink, downLink);
+				int updatedRows = addDrive.addDriveData();
+				
+				if(updatedRows > 0)
+				{
+					ArrayList<DriveData> dList = addDrive.getData(id);
+					int last = dList.size()-1;
+					
+					String updatedViewLink = dList.get(last).getViewLink();
+					String updatedDownLink = dList.get(last).getDownLink();
+					
+					viewLink = " Updated db : "+updatedViewLink;
+					downLink = " Updated db : "+updatedDownLink;
+				}
+			}
+			
+			
+			if(back.equalsIgnoreCase("yes"))
+			{
+				//session = request.getSession(true);
+				session = request.getSession(false);
+				
+				session.setAttribute("id", id);
+				session.setAttribute("userName", username);
+				//session.setAttribute("qrcode", "N/A");
+				session.setAttribute("profileImg", imageUrl);
+				session.setAttribute("email", email);
+				session.setAttribute("idToken", idToken);
+				session.setAttribute("viewLink", viewLink);
+				session.setAttribute("downLink", downLink);
+				session.setAttribute("upLink", upLink);
+				
+				ProductModel pdm = new ProductModel();
+				ArrayList<Product> plist = pdm.getProducts(id);
+				
+				session.setAttribute("size", plist.size());
+				session.setAttribute("products", plist);
+				
+				RequestDispatcher dispatcher = request.getRequestDispatcher("/views/welcome.jsp");
+				dispatcher.forward(request, response);
+			}
+			else
+			{
 			
 			AddDataModel adm = new AddDataModel();
 			ArrayList<User> ulist = adm.addData(id, username, imageUrl, email, idToken);
 			
-			HttpSession session = request.getSession(true);
+			ProductModel pdm = new ProductModel();
+			ArrayList<Product> plist = pdm.getProducts(id);
+			
+			session = request.getSession(true);
+			
+			//DbUtil ut = new DbUtil();
+			//String conResult = ut.testConnection();
+			
+			//session.setAttribute("result", conResult);
 			
 			if(ulist.size() != 1) //Check the number of User objects returned
 			{
 				session.setAttribute("id", "N/A");
 				session.setAttribute("userName", "N/A");
 				//session.setAttribute("qrcode", "N/A");
+				session.setAttribute("profileImg", "N/A");
 				session.setAttribute("email", "N/A");
+				session.setAttribute("idToken", "N/A");
+				session.setAttribute("title", "N/A");
+				session.setAttribute("notes", "");
+				//session.setAttribute("result", conResult);
+				session.setAttribute("viewLink", viewLink);
+				session.setAttribute("downLink", downLink);
+				session.setAttribute("upLink", upLink);
 			}
 			else //Ideal scenario
 			{
 				session.setAttribute("id", ulist.get(0).getId());
 				session.setAttribute("userName", ulist.get(0).getName());
 				//session.setAttribute("qrcode", ulist.get(0).getQrCode());
+				session.setAttribute("profileImg", ulist.get(0).getImageUrl());
 				session.setAttribute("email", ulist.get(0).getEmail());
+				session.setAttribute("idToken", ulist.get(0).getIdToken());
+				session.setAttribute("title", ulist.get(0).getTitle());
+				session.setAttribute("notes", ulist.get(0).getNotes());
+				session.setAttribute("viewLink", viewLink);
+				session.setAttribute("downLink", downLink);
+				session.setAttribute("upLink", upLink);
 			}
 			
-			response.setHeader("Cache-Control","no-cache"); 
-		    response.setHeader("Cache-Control","no-store"); 
-		    response.setDateHeader("Expires", 0); 
-		    response.setHeader("Pragma","no-cache");
+			session.setAttribute("size", plist.size());
+			session.setAttribute("products", plist);
 			
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/views/welcome.jsp");
 			dispatcher.forward(request, response);
+			}
 			
 		} catch (Exception e) {
 
-			System.out.println(e.getMessage());
+			//System.out.println(e.getMessage());
+			String conResult = e.getMessage();
+			
+			session.setAttribute("result", conResult);
+			
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/views/welcome.jsp");
+			dispatcher.forward(request, response);
 		}
 		
 	}

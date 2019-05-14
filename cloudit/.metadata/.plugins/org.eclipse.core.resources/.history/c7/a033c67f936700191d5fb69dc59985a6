@@ -1,0 +1,69 @@
+package com.cloudit;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+public class NotesServlet extends HttpServlet {
+	
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		String id = null;
+		String userName = null;
+		String profileImg = null;
+		String email = null;
+		String idToken = null;
+		String textNotes = null;
+		
+		HttpSession session = null;
+		
+		try {
+			session = request.getSession(true);
+			
+			id = session.getAttribute("id").toString();//
+			userName = session.getAttribute("userName").toString();//
+			profileImg = session.getAttribute("profileImg").toString();//
+			email = session.getAttribute("email").toString();//
+			idToken = session.getAttribute("idToken").toString();//
+			
+			//String userId = session.getAttribute("id").toString();
+			textNotes = request.getParameter("notesText");
+			
+			AddDataModel adm = new AddDataModel();
+			adm.updateNotes(id, textNotes);
+			
+			ProductModel pdm = new ProductModel();//
+			ArrayList<Product> plist = pdm.getProducts(id);//
+			
+			ArrayList<User> ulist = adm.getUser();
+			
+			/*session.setAttribute("id", ulist.get(0).getId());
+			session.setAttribute("userName", ulist.get(0).getName());///*
+			session.setAttribute("profileImg", ulist.get(0).getImageUrl());
+			session.setAttribute("email", ulist.get(0).getEmail());
+			session.setAttribute("idToken", ulist.get(0).getIdToken());*/
+			session.setAttribute("title", ulist.get(0).getTitle());///*
+			session.setAttribute("notes", ulist.get(0).getNotes());
+			
+			session.setAttribute("size", plist.size());
+			session.setAttribute("products", plist);
+			
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/views/welcome.jsp");
+			dispatcher.forward(request, response);
+			
+		} catch(Exception e)
+		{
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/views/index.jsp");
+			dispatcher.forward(request, response);
+		}
+		
+		
+	}
+
+}

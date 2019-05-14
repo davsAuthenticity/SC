@@ -4,19 +4,20 @@ class User {
 	
 	String id;
 	String name;
+	String title;
 	String imageUrl;
 	String email;
 	String idToken;
 	String qrCode;
+	String notes;
 	
-	public User(String id, String name, String imageUrl, String email, String idToken, String qrCode) {
+	public User(String id, String name, String imageUrl, String email, String idToken) {
 
 		this.id = id;
 		this.name = name;
 		this.imageUrl = imageUrl;
 		this.email = email;
 		this.idToken = idToken;
-		this.qrCode = qrCode;
 	}
 
 	public String getId() {
@@ -65,6 +66,22 @@ class User {
 	
 	public String getQrCode() {
 		return qrCode;
+	}
+	
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	
+	public String getTitle() {
+		return title;
+	}
+	
+	public void setNotes(String notes) {
+		this.notes = notes;
+	}
+	
+	public String getNotes() {
+		return notes;
 	}
 
 }
