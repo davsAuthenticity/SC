@@ -1,6 +1,7 @@
 package com.cloudit;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -26,7 +27,14 @@ public class DriveServlet extends HttpServlet {
 		session = request.getSession();
 		
 		String uid = request.getParameter("uId");
+		String directUrl = request.getParameter("directLink");
+		
+		AddDriveDataModel addm = new AddDriveDataModel();
+		ArrayList<UploadFileData> filelist = addm.getCloudData(uid);
+		
+		session.setAttribute("files", filelist);
 		session.setAttribute("uid", uid);
+		session.setAttribute("directUrl", directUrl);
 		
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/views/cloud.jsp");
 		dispatcher.forward(request, response);

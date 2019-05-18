@@ -43,7 +43,7 @@ import org.joda.time.format.DateTimeFormatter;
 public class GoogleCloudUploadServlet extends HttpServlet {
 	
 	private static Storage storage = null;
-	HttpSession session = null;
+	//HttpSession session = null;
 	
 	String uId = null;
 	
@@ -59,7 +59,7 @@ public class GoogleCloudUploadServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		//doGet(request, response);
-		session = request.getSession();
+		//session = request.getSession();
 		
 		uId = request.getParameter("userId");
 		Part filePart =  request.getPart("myFile");
@@ -71,11 +71,11 @@ public class GoogleCloudUploadServlet extends HttpServlet {
 		AddDriveDataModel adm = new AddDriveDataModel(ufd.getUserId(), ufd.getMediaLink(), ufd.getSelfLink(), ufd.getDirectUrl());
 		
 		try {
-			int updatedRows = adm.addGoogleCloudData();
+			int updatedRows = adm.addGoogleCloudData(uId);
 			
 			if(updatedRows > 0)
 			{
-				session.setAttribute("directLink", ufd.getDirectUrl());
+				request.setAttribute("directLink", ufd.getDirectUrl());
 				
 				RequestDispatcher dispatcher = request.getRequestDispatcher("/views/index.jsp");
 				dispatcher.forward(request, response);
@@ -83,10 +83,14 @@ public class GoogleCloudUploadServlet extends HttpServlet {
 			
 		} catch (ClassNotFoundException e) {
 			
-			e.printStackTrace();
+			//e.printStackTrace();
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/views/index.jsp");
+			dispatcher.forward(request, response);
 		} catch (SQLException e) {
 			
-			e.printStackTrace();
+			//e.printStackTrace();
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/views/index.jsp");
+			dispatcher.forward(request, response);
 		}
 	}
 	
@@ -117,7 +121,7 @@ public class GoogleCloudUploadServlet extends HttpServlet {
 	    String selfLink = blobInfo.getSelfLink();
 	    String directUrl = "https://storage.googleapis.com/avsfilestorage/"+fileName;
 	    
-	    UploadFileData ufd = new UploadFileData(uId, mediaLink, selfLink, directUrl);
+	    UploadFileData ufd = new UploadFileData(this.uId, mediaLink, selfLink, directUrl);
 	    
 	    return ufd;
 	 }

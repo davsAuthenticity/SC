@@ -13,20 +13,46 @@
 <link href="https://fonts.googleapis.com/css?family=Titillium+Web" rel="stylesheet">
 </head>
 <body>
-    <br>
-	<!-- <form enctype="multipart/form-data">
-	  <input id="file" name="file" type="file" required/><br/>
-	  <input type="button" value="Upload" onclick="handleFiles();"/>
-	</form> -->
-	<form action="googlecloud" method="post" name="putFile" id="putFile"
-        enctype="multipart/form-data">
-        <input type="file" name="myFile" id="fileName">
-        <input type="hidden" id="userId" name="userId" value="${uid}" />
-        <input type="submit" value="Upload">
-    </form>
-    <br>
-		<label id="userId"></label>
-	<br>
+	<div class="cloud">
+		<div class="top"></div>
+		<div class="middle">
+			<div class="upload-area">
+				<div class="left-side">
+					
+				</div>
+				<div class="center-area">
+					<div class="file-upload">
+					<form action="googlecloud" method="post" name="putFile" id="putFile"
+				        enctype="multipart/form-data">
+				        <input type="file" name="myFile" id="fileName">
+				        <input type="hidden" id="userId" name="userId" value="${uid}" />
+				        <input type="submit" value="Upload" class="upload-button">
+				    </form>
+				    <br>
+						<button id="btnViewLink" name="btnViewLink" onclick="openFile()" class="view-button">Open File</button>
+					<br>
+					</div>
+					<br>
+					<div class="file-list">
+						<div class="block-file">
+							<label>List of Uploaded Files</label>
+								<br>
+									<select id="filelist" name="filelist" size="5" class="qr" onchange="openUploadedFile(this)">
+										<c:forEach var="files" items="${files}">
+											<option value="${files.id}">${files.directUrl}</option>
+										</c:forEach>
+									</select>
+						</div>
+					</div>
+				</div>
+				<div class="right-side">
+					<button id="back" class="back-to-profile" onclick="navigateToProfile();">Back</button>
+				</div>
+			</div>
+		</div>
+		<div class="bottom"></div>
+	</div>
+	<input type="hidden" id="directUrl" name="directUrl" value="${directUrl}">
     <script src="https://apis.google.com/js/platform.js" async defer></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 	<script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
@@ -44,6 +70,36 @@
 	            );
 	        }
 	    }*/
+	    
+	    function onLoad() 
+		{
+		      var url = document.getElementById("directUrl").value;
+		      
+		      if(url == '0')
+		      {
+		    	  document.getElementById('btnViewLink').disabled = true;
+		      }
+		      esle
+		      {
+		    	  document.getElementById('btnViewLink').disabled = false;
+		      }
+		}
+	    
+	    function openFile()
+	    {
+	    	var url = document.getElementById("directUrl").value;
+	    	
+	    	window.open(url, "myWindow", 'width=800,height=600');
+	    	//window.close();
+	    }
+	    
+	    function openUploadedFile(link)
+	    {	    
+	    	var url = link.options[link.selectedIndex].text;
+	    	window.open(url, "myWindow", 'width=800,height=600');
+	    	//window.close();
+	    	//alert(link);
+	    }
 	    
 	    function handleFiles() {
 
@@ -150,6 +206,18 @@
           request.send(postData);
         }
       }
+      
+      function navigateToProfile()
+	  {
+		var redirectBack = "/";
+					
+			//using jQuery to post data to the server dynamically
+		var form = $('<form action="' + redirectBack + '" method="post">' +
+			'</form>');
+				
+		$('body').append(form);
+		form.submit();
+	  }
     </script>
 </body>
 </html>

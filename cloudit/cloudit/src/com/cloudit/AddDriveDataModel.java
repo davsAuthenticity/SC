@@ -15,6 +15,12 @@ public class AddDriveDataModel {
 	String directLink = null;
 	
 	ArrayList<DriveData> driveDataList = null; 
+	ArrayList<UploadFileData> cloudDataList = null;
+	
+	public AddDriveDataModel()
+	{
+		util = new DbUtil();
+	}
 	
 	public AddDriveDataModel(String userId, String viewLink, String downLink)
 	{
@@ -52,25 +58,6 @@ public class AddDriveDataModel {
 		return insertedRows;
 	}
 	
-	public int addGoogleCloudData() throws SQLException, ClassNotFoundException
-	{
-		util.getConnection();
-				
-		int insertedRows = 0;
-				
-		/* Update the tbluserdata by saving the qrcode as a string */
-		String sql = "INSERT INTO tbldrivedata (mediaLink, selfLink, directLink, user) VALUES ('"+this.mediaLink+"', '"+this.selfLink+"', '"+this.directLink+"', '"+this.uId+"');";
-		insertedRows = util.updateQuery(sql);
-				
-		if(insertedRows>0)
-		{
-			System.out.println("Successfully inserted the google cloud data to the database!");
-		}
-				
-		util.closeConnection();	
-		return insertedRows;
-	}
-	
 	public ArrayList<DriveData> getData(String user)
 	{
 		try {
@@ -93,6 +80,61 @@ public class AddDriveDataModel {
 			}
 			
 			return driveDataList;
+			
+		}catch(SQLException e)
+		{
+			e.printStackTrace();
+			return null;
+			
+		} catch (ClassNotFoundException e) {
+			
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public int addGoogleCloudData(String user) throws SQLException, ClassNotFoundException
+	{
+		util.getConnection();
+				
+		int insertedRows = 0;
+				
+		/* Update the tbluserdata by saving the qrcode as a string */
+		String sql = "INSERT INTO tbldrivedata (mediaLink, selfLink, directLink, user) VALUES ('"+this.mediaLink+"', '"+this.selfLink+"', '"+this.directLink+"', '"+user+"');";
+		insertedRows = util.updateQuery(sql);
+				
+		if(insertedRows>0)
+		{
+			System.out.println("Successfully inserted the google cloud data to the database!");
+		}
+				
+		util.closeConnection();	
+		return insertedRows;
+	}
+	
+	public ArrayList<UploadFileData> getCloudData(String user)
+	{
+		try {
+			util.getConnection();
+			
+			cloudDataList = new ArrayList<UploadFileData>();
+			
+			String sql = "SELECT * FROM tbldrivedata WHERE user='"+user+"';";
+			ResultSet myRs = util.selectQuery(sql);
+			
+			while(myRs.next())
+			{
+				int id = myRs.getInt("id");
+				String mediaLink = myRs.getString("mediaLink");
+				String selfLink = myRs.getString("selfLink");
+				String directLink = myRs.getString("directLink");
+				String userId = myRs.getString("user");
+				
+				UploadFileData ufd = new UploadFileData(id, userId, mediaLink, selfLink, directLink);
+				cloudDataList.add(ufd);
+			}
+			
+			return cloudDataList;
 			
 		}catch(SQLException e)
 		{

@@ -29,63 +29,6 @@ public class LoginServlet extends HttpServlet {
 		HttpSession session = null;
 		
 		try {
-//			GoogleIdToken.Payload payload = IdTokenVerifierAndParser.getPayLoad(idToken);
-			
-//			String id = (String)payload.get("id");
-//			String name = (String)payload.get("name");
-//			String imageUrl = (String)payload.get("imageUrl");
-//			String email = payload.getEmail(); 
-			
-			if(viewLink.isEmpty() && downLink.isEmpty())
-			{
-				viewLink = "Empty";
-				downLink = "Empty";
-			}
-			else
-			{
-				AddDriveDataModel addDrive = new AddDriveDataModel(id, viewLink, downLink);
-				int updatedRows = addDrive.addDriveData();
-				
-				if(updatedRows > 0)
-				{
-					ArrayList<DriveData> dList = addDrive.getData(id);
-					int last = dList.size()-1;
-					
-					String updatedViewLink = dList.get(last).getViewLink();
-					String updatedDownLink = dList.get(last).getDownLink();
-					
-					viewLink = " Updated db : "+updatedViewLink;
-					downLink = " Updated db : "+updatedDownLink;
-				}
-			}
-			
-			
-			if(back.equalsIgnoreCase("yes"))
-			{
-				//session = request.getSession(true);
-				session = request.getSession(false);
-				
-				session.setAttribute("id", id);
-				session.setAttribute("userName", username);
-				//session.setAttribute("qrcode", "N/A");
-				session.setAttribute("profileImg", imageUrl);
-				session.setAttribute("email", email);
-				session.setAttribute("idToken", idToken);
-				session.setAttribute("viewLink", viewLink);
-				session.setAttribute("downLink", downLink);
-				session.setAttribute("upLink", upLink);
-				
-				ProductModel pdm = new ProductModel();
-				ArrayList<Product> plist = pdm.getProducts(id);
-				
-				session.setAttribute("size", plist.size());
-				session.setAttribute("products", plist);
-				
-				RequestDispatcher dispatcher = request.getRequestDispatcher("/views/welcome.jsp");
-				dispatcher.forward(request, response);
-			}
-			else
-			{
 			
 			AddDataModel adm = new AddDataModel();
 			ArrayList<User> ulist = adm.addData(id, username, imageUrl, email, idToken);
@@ -135,7 +78,6 @@ public class LoginServlet extends HttpServlet {
 			
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/views/welcome.jsp");
 			dispatcher.forward(request, response);
-			}
 			
 		} catch (Exception e) {
 

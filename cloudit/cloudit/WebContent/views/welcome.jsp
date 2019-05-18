@@ -24,6 +24,7 @@
 						<br>
 						<img class="profile-image" alt="Profile Picture" src="${profileImg}">
 						<br>
+						<input type="hidden" id="uploadLink" name="uploadLink" value="${upLink}" />
 						<br>
 						<label id="userTitle">${title}</label>
 						<br>
@@ -309,10 +310,17 @@
 		function cloudUpload() {
 				
 			var redirectUrl = 'drive';
+			var uploadUrl = document.getElementById("uploadLink").value;
+			
+			if(uploadUrl == '')
+			{
+				uploadUrl = '0';
+			}
 				
 			//using jQuery to post data to the server dynamically
 			var form = $('<form action="' + redirectUrl + '" method="post">' +
 				'<input type="text" name="uId" value="' +userIdentification +'" />' +
+				'<input type="text" name="directLink" value="' +uploadUrl +'" />' +
 				'</form>');
 				
 			$('body').append(form);

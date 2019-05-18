@@ -38,7 +38,7 @@ class AddDataModel {
 			if(rowCount == 0) //If user does not exist in the database
 			{
 				/* Inserting user details to the database */
-				sql2 = "INSERT INTO tbluserdata VALUES('"+id+"', '"+username+"', '"+imgUrl+"', '"+email+"', '"+idToken+"');";
+				sql2 = "INSERT INTO tbluserdata (id, name, imageurl, email, idtoken) VALUES ('"+id+"', '"+username+"', '"+imgUrl+"', '"+email+"', '"+idToken+"');";
 				updatedRows = util.updateQuery(sql2);
 				
 				if(updatedRows>0)

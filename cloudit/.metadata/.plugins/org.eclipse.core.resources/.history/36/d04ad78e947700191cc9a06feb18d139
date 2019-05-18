@@ -1,0 +1,545 @@
+
+body{
+	background-color: #043452;
+}
+
+/*========================Home Page=====================*/
+
+.container{
+	width: 100vw;
+	height: 100vh;
+	display : grid;
+	grid-template-rows : 0.2fr 1fr 0.2fr;
+	grid-template-columns : 1fr;
+}
+
+.header{
+	background-color: #08649e;
+	display : grid;
+	grid-template-rows : 1fr;
+	grid-template-columns : 0.3fr 1fr 0.3fr; 
+}
+
+.main{
+	background-color: #043452;
+	display : grid;
+	grid-template-rows : 1fr;
+	grid-template-columns : repeat(3, 1fr);
+}
+
+.banner-image{
+	margin-top: 0.25%;
+	width: 85vw;
+	height: 10vw;
+}
+
+.quote{
+	margin-top: 5%;
+	margin-bottom: 5%;
+	margin-left: auto;
+	margin-right: auto;
+	padding-top: 5%;
+	padding-bottom: 5%;
+	padding-left: 5%;
+	padding-right: 5%;
+	width: 90%;
+	height: 80%;
+	background-color: #dae7ff;
+	border-radius: 0.5rem;
+	font-family: 'Titillium Web', sans-serif; 
+	font-size: large;
+}
+
+.author{
+	color: #708bc8;
+}
+
+.sign-in{
+	margin-top: 5%;
+	margin-bottom: 5%;
+	margin-left: auto;
+	margin-right: auto;
+	padding-top: 20%;
+	padding-bottom: 20%;
+	padding-left: 5%;
+	padding-right: 5%;
+	width: 90%;
+	height: 80%;
+	background-color: #F7F9F9;
+	border-radius: 0.5rem;
+	text-align: center;
+}
+
+.google-signin{
+	display: inline-block;
+}
+
+.footer{
+	background-color: #064c78;
+}
+
+/*========================Profile Page=====================*/
+
+.profile{
+	width: 100vw;
+	height: 100vh;
+	display:grid;
+	grid-template-rows : 0.04fr 2.2fr 0.04fr;
+	grid-template-columns : 1fr;
+}
+
+.middle{
+	display: grid;
+	grid-template-rows : 1fr;
+	grid-template-columns : 0.03fr 5fr 0.03fr;
+}
+
+.main-area{
+	background-color: #08649e;
+	grid-row:1/2;
+	grid-column:2/3;
+	display:grid;
+	grid-template-rows: 1fr;
+	grid-template-columns: 0.8fr 0.9fr 0.2fr;
+}
+
+.user{
+	grid-row: 1/2;
+	grid-column: 1/2;
+	display: grid;
+	grid-template-rows: 1fr;
+	grid-template-columns: 1fr 0.5fr;
+	font-family: 'Titillium Web', sans-serif;
+	font-size: large;
+}
+
+.user-data{
+	grid-row: 1/2;
+	grid-column: 1/2;
+	text-align: center;
+}
+
+.profile-image{
+	margin-top: 0.25%;
+	width: 15vw;
+	height: 15vw;
+}
+
+.text-notes{
+	font-family: 'Titillium Web', sans-serif; 
+}
+
+.user-actions{
+	grid-row: 1/2;
+	grid-column: 2/3;
+}
+
+.scan-button{
+  background-color: #FF3349;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-family: 'Titillium Web', sans-serif; 
+}
+
+.functions{
+	grid-row: 1/2;
+	grid-column: 2/3;
+	display:grid;
+	grid-template-rows: 0.5fr 0.5fr 0.9fr;
+	grid-template-columns: 1fr;
+	font-family: 'Titillium Web', sans-serif;
+	font-size: large;
+}
+
+.qrcode-list{
+	padding-top: 3%;
+	grid-row: 1/2;
+	grid-column: 1/2;
+	text-align: center;
+	overflow: auto;
+	display: block;
+}
+
+.block-qr{
+	width: 600px;
+	overflow-x: auto;
+	overflow-y: auto;
+}
+
+.barcode-list{
+	padding-top: 3%;
+	grid-row: 2/3;
+	grid-column: 1/2;
+	text-align: center;
+	overflow: auto;
+	display: block;
+}
+
+.block-bar{
+	width: 600px;
+	overflow-x: auto;
+}
+
+.qr{
+	width: 1000px;
+	font-size:small;
+}
+
+.bar{
+	width: 1000px;
+	font-size:small;
+}
+
+.qr-bar-area{
+	grid-row: 3/4;
+	grid-column: 1/2;
+}
+
+.generate{
+	padding-top: 3%;
+	grid-row: 1/2;
+	grid-column: 1/2;
+	display:grid;
+	grid-template-rows: 1fr;
+	grid-template-columns: repeat(2, 1fr);
+}
+
+.convert-text{
+	padding-top: 1%;
+	grid-row: 1/2;
+	grid-column: 1/2;
+}
+
+.qr-bar-buttons{
+	grid-row: 1/2;
+	grid-column: 2/3;
+}
+
+.generated-image{
+	grid-row: 2/3;
+	grid-column: 1/2;
+	text-align: left;
+	margin: 0 auto;
+}
+
+.qrcode-button{
+  background-color: #AEB6BF;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  width: 150px;
+  height: 45px;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-family: 'Titillium Web', sans-serif; 
+}
+
+.barcode-button{
+  background-color: #AEB6BF;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  width: 150px;
+  height: 45px;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-family: 'Titillium Web', sans-serif; 
+}
+
+.signout-area{
+	grid-row: 1/2;
+	grid-column: 3/4;
+	display:grid;
+	text-align: left;
+}
+
+.signout-button{
+  background-color: #AEB6BF;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  width: 130px;
+  height: 40px;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-family: 'Titillium Web', sans-serif; 
+}
+
+/*=====================Scan Page=======================*/
+
+.scan{
+	width: 100vw;
+	height: 100vh;
+	display:grid;
+	grid-template-rows : 0.1fr 2.2fr 0.1fr;
+	grid-template-columns : 1fr;
+	font-family: 'Titillium Web', sans-serif; 
+}
+
+.scan-area{
+	background-color: #08649e;
+	grid-row:1/2;
+	grid-column:2/3;
+	display:grid;
+	grid-template-rows: 1.5fr 0.5fr;
+	grid-template-columns: 1fr;
+}
+
+.camera-area{
+	grid-row: 1/2;
+	display:grid;
+	grid-template-rows: 1fr;
+	grid-template-columns: 0.3fr 1fr 0.3fr;
+}
+
+.operate{
+	padding-top: 40%;
+	grid-row: 1/2;
+	grid-column: 1/2;
+	text-align: right;
+}
+
+.camera{
+	padding-top: 2%;
+	grid-row: 1/2;
+	grid-column: 2/3;
+}
+
+.perform{
+	grid-row: 1/2;
+	grid-column: 3/4;
+	text-align: left;
+}
+
+.scan-perform{
+	padding-top: 30%;
+}
+
+.on-camera{
+  background-color: #AEB6BF;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  width: 150px;
+  height: 60px;
+  border-radius: 0.25rem;
+  cursor: pointer;  
+  font-family: 'Titillium Web', sans-serif; 
+}
+
+.off-camera{
+  background-color: #AEB6BF;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  width: 150px;
+  height: 60px;
+  border-radius: 0.25rem;
+  cursor: pointer;  
+  font-family: 'Titillium Web', sans-serif; 
+}
+
+.back-to-profile{
+  background-color: #000000;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  width: 100px;
+  height: 40px;
+  border-radius: 0.25rem;
+  cursor: pointer;  
+  font-family: 'Titillium Web', sans-serif; 
+}
+
+.scan-qr{
+  background-color: #FF3349;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  width: 150px;
+  height: 60px;
+  border-radius: 0.25rem;
+  cursor: pointer;  
+  font-family: 'Titillium Web', sans-serif; 
+}
+
+.scan-bar{
+  background-color: #FF3349;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  width: 150px;
+  height: 60px;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-family: 'Titillium Web', sans-serif;   
+}
+
+.send-area{
+	grid-row: 2/3;
+	display:grid;
+	grid-template-rows: 1fr;
+	grid-template-columns: 0.3fr 1fr 0.3fr;
+}
+
+.decode{
+	padding-top: 1%;
+	text-align: center;
+}
+
+.decoded-text{
+	width: 800px;
+	height: 40px;
+}
+
+.sender-details{
+	margin-top: 1%;
+	width: 400px;
+	height: 30px;
+}
+
+.decode-right{
+	margin-top: 5%;
+	text-align: left;
+}
+
+.send-email{
+  background-color: #000000;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  width: 150px;
+  height: 60px;
+  border-radius: 0.25rem;
+  cursor: pointer;  
+  font-family: 'Titillium Web', sans-serif; 
+}
+
+#webcamera {
+	margin: 0px auto;
+	width: 640px;
+	height: 300px;
+}
+
+#vedioElement {
+	margin: 0px auto;
+	width: 640px;
+	height: 300px;
+}
+
+#screenshot{
+	margin: 0px auto;
+	width: 640px;
+	height: 300px;
+}
+
+/*=====================Cloud Upload Page=======================*/
+
+.cloud{
+	width: 100vw;
+	height: 100vh;
+	display:grid;
+	grid-template-rows : 0.1fr 2.2fr 0.1fr;
+	grid-template-columns : 1fr;
+	font-family: 'Titillium Web', sans-serif; 
+}
+
+.upload-area{
+	background-color: #08649e;
+	grid-row:1/2;
+	grid-column:2/3;
+	display:grid;
+	grid-template-rows: 1.5fr 0.5fr;
+	grid-template-columns: 1fr;
+}
+
+.left-side{
+	grid-row: 1/2;
+	grid-column: 1/2;
+}
+
+.center-area{
+	grid-row: 1/2;
+	grid-column: 2/3;
+}
+
+.right-side{
+	grid-row: 1/2;
+	grid-column: 3/4;
+}
+
+.upload-button{
+  background-color: #AEB6BF;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  width: 130px;
+  height: 40px;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-family: 'Titillium Web', sans-serif; 
+}
+
+.file-button{
+  background-color: #AEB6BF;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  width: 65px;
+  height: 20px;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-family: 'Titillium Web', sans-serif; 
+}
+
